@@ -11,10 +11,9 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 
-# Example schemas (replace with your own):
 
 class User(BaseModel):
     """
@@ -27,6 +26,7 @@ class User(BaseModel):
     age: Optional[int] = Field(None, ge=0, le=120, description="Age in years")
     is_active: bool = Field(True, description="Whether user is active")
 
+
 class Product(BaseModel):
     """
     Products collection schema
@@ -38,11 +38,17 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+# RZ-CLEAN-SEAL lead schema for contact/quotations
+class Lead(BaseModel):
+    """
+    Leads collection schema
+    Collection name: "lead"
+    """
+    nome: str = Field(..., description="Nome completo")
+    email: EmailStr = Field(..., description="Email de contacto")
+    telefone: Optional[str] = Field(None, description="Telefone de contacto")
+    mensagem: Optional[str] = Field(None, description="Mensagem enviada pelo utilizador")
+    origem: Optional[str] = Field("website", description="Origem do lead (website, blog, campanha)")
+    tipo: Optional[str] = Field("pedido-orcamento", description="Tipo de pedido (orcamento, inspecao, parceria)")
+    consentimento: bool = Field(True, description="Consentimento para contacto de follow-up")
